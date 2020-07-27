@@ -1,15 +1,20 @@
 <?php
+    
+    if(isset($_GET['id']) && ctype_digit($_GET['id'])){
+        $id = $_GET['id'];
+    }
+    else{
+        header('Location: select.php');
+    }
 
     $name = '';
     $password = '';
     $gender = '';
     $sport = '';
-    $languages = [];
     $comments = '';
     $tc = '';
 
     if(isset($_POST['submit'])){
-        #echo htmlspecialchars($_POST['search'], ENT_QUOTES);
         
         $ok=true;
 
@@ -33,11 +38,6 @@
         }
         else
             $ok=false;
-        if(isset($_POST['languages'])){
-            $languages = $_POST['languages'];
-        }
-        else
-            $ok=false;
         if(isset($_POST['comments'])){
             $comments = $_POST['comments'];
         }
@@ -50,21 +50,6 @@
             $ok=false;
 
         if($ok){
-        /*printf('User name: %s <br> 
-            Password: %s <br>
-            Gender: %s <br>
-            Sport: %s <br>
-            Language(s): %s <br>
-            Comments: %s <br>
-            T&amp;C: %s <br>',
-            htmlspecialchars($name, ENT_QUOTES),
-            htmlspecialchars($password, ENT_QUOTES),
-            htmlspecialchars($gender, ENT_QUOTES),
-            htmlspecialchars($sport, ENT_QUOTES),
-            htmlspecialchars(implode(' ', $languages), ENT_QUOTES),
-            htmlspecialchars($comments, ENT_QUOTES),
-            htmlspecialchars($tc, ENT_QUOTES));*/
-
             $db = new mysqli(
                 'localhost',
                 'root',
@@ -73,23 +58,42 @@
             );
 
             $sql = sprintf(
-                "INSERT INTO users (name, gender, sport, comments, tc, password) VALUES
-                ('%s','%s','%s','%s','%s','%s')",
+                "UPDATE users SET name='%s', gender='%s', sport='%s', comments='%s', tc='%s', password=%'s'
+                WHERE id='%s'",
                 $db->real_escape_string($name),
                 $db->real_escape_string($gender),
                 $db->real_escape_string($sport),
                 $db->real_escape_string($comments),
                 $db->real_escape_string($tc),
-                $db->real_escape_string($password)
+                $db->real_escape_string($password),
+                $id
             );
 
             $db->query($sql);
             echo '<p>User added.</p>';
             $db->close();
         }
+        else{
+            $db = new mysqli(
+                'localhost',
+                'root',
+                '',
+                'tutorial_1'
+            );
+
+            $sql = "SELECT * FROM users WHERE id=$id";
+            $result = $db->query($sql);
+            foreach($result as $row){
+                $name = $row['name'];
+                $gender = $row['gender'];
+                $sport = $row['sport'];
+                $comments = $row['comments'];
+                $tc = $row['tc'];
+            }
+            $db->close();
+        }
     }
 ?>
-
 
 <form 
     action=""
@@ -138,25 +142,6 @@
                 if($sport === 'Voleyball')
                     echo ' selected';
             ?>>Voleyball</option>
-        </select><br>
-    Languages spoken:
-        <select name="languages[]" multiple size = "3">
-        <option value="ro"<?php 
-            if(in_array('ro',$languages))
-                echo ' selected';
-        ?>>Romanian</option>
-        <option value="en"<?php 
-            if(in_array('en',$languages))
-                echo ' selected';
-        ?>>English</option>
-        <option value="fr"<?php 
-            if(in_array('fr',$languages))
-                echo ' selected';
-        ?>>French</option>
-        <option value="gr"<?php 
-            if(in_array('gr',$languages))
-                echo ' selected';
-        ?>>German</option>
         </select><br>
     Comments: <textarea name="comments"><?php
         echo htmlspecialchars($comments, ENT_QUOTES);
