@@ -1,5 +1,7 @@
 <?php
 
+    require 'config_inc.php';
+
     $name = '';
     $password = '';
     $gender = '';
@@ -66,10 +68,10 @@
             htmlspecialchars($tc, ENT_QUOTES));*/
 
             $db = new mysqli(
-                'localhost',
-                'root',
-                '',
-                'tutorial_1'
+                MYSQL_HOST,
+                MYSQL_USER,
+                MYSQL_PASSWORD,
+                MYSQL_DATABASE
             );
 
             $sql = sprintf(

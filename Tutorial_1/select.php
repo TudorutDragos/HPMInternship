@@ -1,11 +1,13 @@
 <ul>
 <?php
 
+    require 'config_inc.php';
+    
     $db = new mysqli(
-        'localhost',
-        'root',
-        '',
-        'tutorial_1'
+        MYSQL_HOST,
+        MYSQL_USER,
+        MYSQL_PASSWORD,
+        MYSQL_DATABASE
     );
 
     $sql = 'SELECT * FROM users';

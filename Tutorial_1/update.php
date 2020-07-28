@@ -1,5 +1,7 @@
 <?php
     
+    require 'config_inc.php';
+
     if(isset($_GET['id']) && ctype_digit($_GET['id'])){
         $id = $_GET['id'];
     }
@@ -75,10 +77,10 @@
         }
         else{
             $db = new mysqli(
-                'localhost',
-                'root',
-                '',
-                'tutorial_1'
+                MYSQL_HOST,
+                MYSQL_USER,
+                MYSQL_PASSWORD,
+                MYSQL_DATABASE
             );
 
             $sql = "SELECT * FROM users WHERE id=$id";
